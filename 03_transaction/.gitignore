@@ -35,3 +35,5 @@ out/
 
 ### VS Code ###
 .vscode/
+
+../02_connectionPool_datasource/
