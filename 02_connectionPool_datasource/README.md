@@ -64,3 +64,48 @@ ConnectionTest - connection=HikariProxyConnection@832292933 wrapping conn1:
 url=jdbc:h2:tcp://localhost/~/test user=SA, class=class com.zaxxer.hikari.pool.HikariProxyConnection
 MyPool - After adding stats (total=10, active=2, idle=8, waiting=0)
 ```
+
+### DI : Dependency Injection
+- DriverManagerDataSource HikariDataSource 로 변경해도 MemberRepositoryV1 의 코드는 전혀 변
+경하지 않아도 된다. MemberRepositoryV1 는 DataSource 인터페이스에만 의존하기 때문이다. 이것이 DataSource 를 사용하는 장점이다.(DI + OCP)
+
+### Dependency Injection (의존성 주입)
+- 내부가 아니라 외부에서 객체를 생성해서 주입시켜주는 것을 말한다.
+- 상위 계층은 추상화해놓고, 하위 계층에서는 구현을 하는 방식으로 의존성을 분리하여 독립시키는 것이 바로 의존성 분리이다.
+- 이 때 나온 개념이 바로 ***IoC :: Inversion Of Control (제어의 역전)*** 인데, 상위의 계층이 하위에 계층에 의존하여 결합도가 높은 코드를 말한다. 예시는 다음과 같다.
+```java
+public class Car {
+  private HyunDai hyundai;
+
+  public Car() {
+    // 차 브랜드를 현대에서 기아로 바꾸려면 코드 자체를 변경해야 한다.
+    // new Kia(); 로 직접 코드를 변경해야 한다.
+    this.hyundai = new HyunDai();
+  }
+}
+```
+- 아래 예시는 의존성 주입을 통해 분리시킨 예시이다.
+```java
+public interface CarBrand { }
+
+public class HyunDai implements CarBrand { }
+public class Kia implements CarBrand { }
+
+public class Car {
+  private CarBrand brand;
+
+  public Car(CarBrand brand) {
+    // 이렇게 하면 Car를 생성할 때 브랜드를 외부에서 주입시켜줄 수 있다.
+    // 외부에서 Car를 호출할때, 현대를 호출하려면 new Car(HyunDai) 를 하면 되고, 기아를 호출하려면 new Car(Kia)를 하면 된다.
+    this.brand = brand;
+  }
+}
+```
+
+### OCP : Open - Close Principle
+- 객체지향 설계 5원칙 SOLID 중, O 에 해당하는 원칙이다.
+- **확장에 대해서는 개방적(Open)** 이고, **수정에 대해서는 폐쇄적(Closed)** 이어야 한다는 의미로 정의된다.
+- 예를들어, CarBrand 에서 또 다른 브랜드인 도요타가 추가된다고 해서, Car 클래스나 CarBrand 인터페이스가 변경되지 않는다.(수정에 폐쇄적) 단지, 도요타 클래스를 추가해주면 된다.(확장에 개방적) 다음과 같이 말이다.
+```java
+public class Toyota implements CarBrand { }
+```
