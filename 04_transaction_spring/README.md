@@ -47,7 +47,7 @@ public interface PlatformTransactionManager extends TransactionManager {
 - 다음 트랜잭션 동기화 매니저 클래스를 열어보면 쓰레드 로컬을 사용하는 것을 확인할 수 있다.
 > org.springframework.transaction.support.TransactionSynchronizationManager
 
-### TransactionManager 동작 흐름 ***(트랜잭션 추상화)***
+## TransactionManager 동작 흐름 ***(트랜잭션 추상화)***
 - 트랜잭션 추상화를 적용하면 이제 JDBC 기술같은 구체적인 기술에 의존하지 않아도 된다.
 - 기술 변경시 의존관계 주입만 DataSourceTransactionManager 에서 JpaTransactionManager로 변경해주기만 하면 된다.
 <트랜잭션 시작>
@@ -85,3 +85,35 @@ try {
 ```java
 DataSourceUtils.releaseConnection(con, dataSource);
 ```
+
+## TransactionTemplate (패턴 반복 없애기)
+- 템플릭 콜백 패턴이라고 한다.
+- 언체크 예외가 발생하면 롤백하고, 그 외의 경우 커밋한다.
+```java
+public class TransactionTemplate {
+  private PlatformTransactionManager transactionManager;
+
+  // 응답 값이 있을 때 사용한다.
+  public <T> T execute(TransactionCallback<T> action){..}
+
+  // 응답 값이 없을 때 사용한다.
+  void executeWithoutResult(Consumer<TransactionStatus> action){..}
+}
+```
+
+## @Transactional :: 스프링 AOP
+```md
+org.springframework.transaction.annotation.Transactional
+```
+- 단순히 @Transactinal 만 붙여주면 놀랍게도 dataSource를 적용하고 하던 코드를 없앨 수 있다.
+- dataSource와 TransactionManager는 외부에서 주입해준다.
+- 이에 따라서, application.properties 에 db 접속 정보를 넣어주어야 한다.
+```properties
+spring.datasource.url=jdbc:h2:tcp://localhost/~/test
+spring.datasource.username=sa
+spring.datasource.password=
+```
+###### 참고 : 스프링 AOP를 적용하려면 어드바이저, 포인트컷, 어드바이스가 필요하다. 스프링은 트랜잭션 AOP 처리를 위해 다음 클래스를 제공한다. 스프링 부트를 사용하면 해당 빈들은 스프링 컨테이너에 자동으로 등록된다.
+###### - 어드바이저: BeanFactoryTransactionAttributeSourceAdvisor
+###### - 포인트컷: TransactionAttributeSourcePointcut
+###### - 어드바이스: TransactionInterceptor
