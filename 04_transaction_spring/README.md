@@ -46,3 +46,42 @@ public interface PlatformTransactionManager extends TransactionManager {
 - 스프링은 *트랜잭션 동기화 매니저*를 제공한다. 이것은 ***쓰레드 로컬(ThreadLocal)*** 을 사용해서 커넥션을 동기화해준다.
 - 다음 트랜잭션 동기화 매니저 클래스를 열어보면 쓰레드 로컬을 사용하는 것을 확인할 수 있다.
 > org.springframework.transaction.support.TransactionSynchronizationManager
+
+### TransactionManager 동작 흐름 ***(트랜잭션 추상화)***
+- 트랜잭션 추상화를 적용하면 이제 JDBC 기술같은 구체적인 기술에 의존하지 않아도 된다.
+- 기술 변경시 의존관계 주입만 DataSourceTransactionManager 에서 JpaTransactionManager로 변경해주기만 하면 된다.
+<트랜잭션 시작>
+1. 서비스 계층에서 transactionManager.getTransaction() 을 호출해서 트랜잭션을 시작한다.
+```java
+private final PlatformTransactionManager transactionManager = transactionManager.getTransaction(new DefaultTransactionDefinition());
+```
+2. 트랜잭션 매니저는 내부에서 dataSource를 이용해 **Connection을 생성**한다.
+3. 커넥션을 **수동 커밋 모드**로 변경해서 실제 데이터베이스 **트랜잭션을 시작**한다.
+4. Connection 을 **트랜잭션 동기화 매니저**에 보관한다.
+5. 트랜잭션 동기화 매니저는 **쓰레드 로컬**에 커넥션을 보관한다. 따라서 멀티 쓰레드 환경에서도 안전하게 커넥션을 보관할 수 있다.
+
+<로직 실행>
+6. 비즈니스 로직을 수행한다. 이때, 커넥션을 파라미터로 전달하지 않아도 된다.
+7. Repository 는 DataSourceUtils.getConnection() 를 통해 트랜잭션 동기화 매니저에서 보관된 같은 커넥션을 꺼내서 사용할 수 있다.
+```java
+Connection con = DataSourceUtils.getConnection(dataSource);
+```
+8. SQL을 실행한다.
+
+<트랜잭션 종료>
+9. 트랜잭션 동기화 매니저를 통해 **동기화된 커넥션**을 획득한다.
+10. 트랜잭션을 **커밋**하거나 **롤백**한다.
+```java
+try {
+    //비즈니스 로직
+    bizLogic(fromId, toId, money);
+    transactionManager.commit(status); // 성공시 커밋
+} catch (Exception e) {
+    transactionManager.rollback(status); // 실패시 롤백
+    throw new IllegalStateException(e);
+}
+```
+11. 트랜잭션 동기화 매니저를 정리하고 쓰레드 로컬을 정리한다. 커넥션 풀을 고려해서, con.setAutoCommit(true)로 되돌린다. con.close() 를 호출해서 커넥션을 종료한다. (커넥션 풀을 사용하는 경우는 con.close() 를 호출하면 커넥션 풀에 반환된다.)
+```java
+DataSourceUtils.releaseConnection(con, dataSource);
+```
