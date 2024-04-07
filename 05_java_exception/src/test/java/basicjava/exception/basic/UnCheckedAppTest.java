@@ -11,10 +11,21 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class UnCheckedAppTest {
 
     @Test
-    void uncheckecd() {
+    void unchecked() {
         Controller controller = new Controller();
         assertThatThrownBy(controller::request)
                 .isInstanceOf(Exception.class);
+    }
+
+    @Test
+    void printEx() {
+        Controller controller = new Controller();
+        try {
+            controller.request();
+        } catch (Exception e) {
+//            e.printStackTrace();
+            log.info("ex", e);
+        }
     }
 
     static class Controller {
