@@ -13,7 +13,7 @@ import java.sql.SQLException;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class MemberServiceV4_1 {
+public class MemberServiceV4 {
 
     private final MemberRepositoryV3 memberRepository;
 
