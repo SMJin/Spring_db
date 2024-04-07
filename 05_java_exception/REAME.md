@@ -47,3 +47,26 @@ public void persist(Object entity);
 ```
 - 물론, 런타임 예외도 throws에 선언할 수 있다. 던지는 예외가 명확하고 중요하다면, 명시해놓는 것이 개발자가 IDE를 통해 예외를 확인하기가 편리하다.
 - 어짜피 런타임예외는 선언을 한다고 해도 런타임 예외이기 때문에 무시해도 괜찮다.
+
+## 기존 예외 포함과 스택 트레이스
+- 예외를 변환할 때 파라미터에 기존 예외를 반드시 넣어주어야 한다.
+- 넣어주지 않으면 스택 트레이스 로그를 출력할 때 원래 예외가 뭐였는지 알 수가 없어진다.
+```java
+catch (SQLException e) {
+  // throw new RuntimeSQLException(); // 이렇게 작성하면 안됨.
+  throw new RuntimeSQLException(e); //기존 예외(e) 포함
+}
+```
+```java
+// Throwable 을 통해 기존 예외를 생성자에 넣을 수 있다.
+public RuntimeSQLException(Throwable cause) {
+  super(cause);
+}
+```
+- log.info 출력시 마지막 파라미터에 예외를 넣어주면 스택 트레이스 로그를 출력하는 것과 같다.
+```java
+catch (Exception e) {
+  //e.printStackTrace();
+  log.info("ex", e);
+}
+```
