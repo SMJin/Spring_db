@@ -70,6 +70,7 @@ String result = anitem.speak(() -> {
 2. 인터페이스에는 하나의 추상 메서드만 선언되어야 한다.
 
 ## JdbcTemplate.class 에서 적용한 익명클래스 + 람다
+- [참고](https://www.inflearn.com/questions/749503/jdbctemplateitemrepositoryv1-%EC%A7%88%EB%AC%B8)
 - JdbcTemplate 에서는 결과 객체를 담는 ResultSet에 익명클래스를 적용했다.
 - 익명클래스는 함수처럼 담긴다는 의미로, @FunctionalInterface를 추가해주어야 한다.
 - ResultSet 객체를 RowMapper interface에 담았다.
@@ -108,3 +109,6 @@ private RowMapper<Item> itemRowMapper() {
   }
 }
 ```
+
+## JdbcTemplate 의 단점
+- 동적 쿼리 구현이 상당히 복잡하다.
