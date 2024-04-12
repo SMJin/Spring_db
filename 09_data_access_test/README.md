@@ -63,3 +63,4 @@ create table item
 ## 결론
 - @Transactional 을 넣고
 - application.properties 등에 따로 설정해줄 필요도 없다.
+- schema.sql 을 이용해 초기 테이블만 설정해주자.
