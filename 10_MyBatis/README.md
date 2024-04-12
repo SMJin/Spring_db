@@ -46,8 +46,8 @@ mybatis.mapper-locations=classpath:mapper/**/*.xml
 ```
 
 ## MyBatis 분석하기
-1. 파라미터는 #{} 문법을 사용하면 된다. #{} 문법을 사용하면 ***PreparedStatement*** 를 사용한다. JDBC의 ? 를 치환한다 생각하면 된다.
-2.  useGeneratedKeys="true" keyProperty="id" 이렇게 사용하면 pk값에 대해 auto incresed 처럼 적용된다.
+#### 1. 파라미터는 #{} 문법을 사용하면 된다. #{} 문법을 사용하면 ***PreparedStatement*** 를 사용한다. JDBC의 ? 를 치환한다 생각하면 된다.
+#### 2.  useGeneratedKeys="true" keyProperty="id" 이렇게 사용하면 pk값에 대해 auto incresed 처럼 적용된다.
 > useGeneratedKeys 는 데이터베이스가 키를 생성해 주는 IDENTITY 전략일 때 사용한다. keyProperty는 생성되는 키의 속성 이름을 지정한다. Insert가 끝나면 item 객체의 id 속성에 생성된 값이 입력된다.
 ```java
 void save(Item item);
@@ -58,7 +58,7 @@ void save(Item item);
  values (#{itemName}, #{price}, #{quantity})
 </insert>
 ```
-3. @Param
+#### 3. @Param
 ```java
 import org.apache.ibatis.annotations.Param;
 void update(@Param("id") Long id, @Param("updateParam") ItemUpdateDto updateParam);
@@ -72,7 +72,7 @@ void update(@Param("id") Long id, @Param("updateParam") ItemUpdateDto updatePara
  where id = #{id}
 </update>
 ```
-4. application.properties 에 mybatis.type-aliasespackage=hello.itemservice.domain 속성을 지정
+#### 4. application.properties 에 mybatis.type-aliasespackage=hello.itemservice.domain 속성을 지정
 - 덕분에 모든 패키지 명을 다 적지는 않아도, 결과를 Item 객체에 매핑한다.
 ```java
 Optional<Item> findById(Long id);
@@ -85,16 +85,16 @@ Optional<Item> findById(Long id);
  where id = #{id}
 </select>
 ```
-5. application.properties 에 mybatis.configuration.map-underscore-to-camel-case=true 속성을 지정
+#### 5. application.properties 에 mybatis.configuration.map-underscore-to-camel-case=true 속성을 지정
 - 덕분에 언더스코어를 카멜 표기법으로 자동으로 처리해준다. ( item_name itemName )
-6. <if test="...">, 동적쿼리.
-7. xml 특수문자
+#### 6. <if test="...">, 동적쿼리.
+#### 7. xml 특수문자
 ```text
 < : &lt;
 > : &gt;
 & : &amp;
 ```
-8. CDATA 구문 문법을 사용하면 특수문자를 사용할 수 있다.
+#### 8. CDATA 구문 문법을 사용하면 특수문자를 사용할 수 있다.
 ```xml
 <if test="maxPrice != null">
     and price &lt;= #{maxPrice}
