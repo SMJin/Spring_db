@@ -110,5 +110,45 @@ private RowMapper<Item> itemRowMapper() {
 }
 ```
 
-## JdbcTemplate 의 단점
+## 이름 지정 파라미터 :: NamedParameterJdbcTemplate
+#### 이름 지정 바인딩에서 주로 사용하는 파라미터의 종류는 총 3가지
+ * SqlParameterSource (interface)
+ * - ① BeanPropertySqlParameterSource
+```java
+// 가장 많이 쓰인다. item 객체를 넣어주면 해당 객체의 속성을 기반으로 자동으로 넣어준다. (dto를 넣어도 됨)
+SqlParameterSource param = new BeanPropertySqlParameterSource(item);
+```
+ * - ② MapSqlParameterSource
+```java
+// id 같은 경우에는 where 절에서 들어오는 값이다. 이렇듯 update 문을 사용할 때는 이 구현체를 사용해야 한다.
+MapSqlParameterSource param = new MapSqlParameterSource()
+                .addValue("itemName", updateParam.getItemName())
+                .addValue("price", updateParam.getPrice())
+                .addValue("quantity", updateParam.getQuantity())
+                .addValue("id", itemId);
+```
+ * ③ Map
+```java
+Map<String, Long> param = Map.of("id", id);
+```
+
+#### BeanPropertyRowMapper
+- 자바빈 프로퍼티 규약을 통해서 자동으로 파라미터 객체를 생성한다.
+- _(언더스코어) 표기법을 camel 케이스로 변환해주는 기능을 제공한다.
+
+## SimpleJdbcInsert
+- JdbcTemplate은 INSERT SQL를 직접 작성하지 않아도 되도록 SimpleJdbcInsert 라는 편리한 기능을 제공한다.
+- jdbcInsert.executeAndReturnKey(param) 을 사용해서 INSERT SQL을 실행하고, 생성된 키 값도 매우 편리하게 조회할 수 있다.
+
+## JdbcTemplate 정리 - 주요 기능
+- JdbcTemplate
+> 순서 기반 파라미터 바인딩을 지원한다.
+- NamedParameterJdbcTemplate
+> 이름 기반 파라미터 바인딩을 지원한다. (권장)
+- SimpleJdbcInsert
+> INSERT SQL을 편리하게 사용할 수 있다.
+- SimpleJdbcCall
+> 스토어드 프로시저를 편리하게 호출할 수 있다. ([공식문서](https://docs.spring.io/spring-framework/reference/data-access/jdbc/simple.html#jdbc-simple-jdbc-call-1) 참고)
+
+#### JdbcTemplate 최대 단점점
 - 동적 쿼리 구현이 상당히 복잡하다.
