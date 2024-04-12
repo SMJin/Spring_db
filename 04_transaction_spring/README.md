@@ -50,7 +50,7 @@ public interface PlatformTransactionManager extends TransactionManager {
 ## TransactionManager 동작 흐름 ***(트랜잭션 추상화)***
 - 트랜잭션 추상화를 적용하면 이제 JDBC 기술같은 구체적인 기술에 의존하지 않아도 된다.
 - 기술 변경시 의존관계 주입만 DataSourceTransactionManager 에서 JpaTransactionManager로 변경해주기만 하면 된다.
-<트랜잭션 시작>
+##### <트랜잭션 시작>
 1. 서비스 계층에서 transactionManager.getTransaction() 을 호출해서 트랜잭션을 시작한다.
 ```java
 private final PlatformTransactionManager transactionManager = transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -60,7 +60,7 @@ private final PlatformTransactionManager transactionManager = transactionManager
 4. Connection 을 **트랜잭션 동기화 매니저**에 보관한다.
 5. 트랜잭션 동기화 매니저는 **쓰레드 로컬**에 커넥션을 보관한다. 따라서 멀티 쓰레드 환경에서도 안전하게 커넥션을 보관할 수 있다.
 
-<로직 실행>
+##### <로직 실행>
 6. 비즈니스 로직을 수행한다. 이때, 커넥션을 파라미터로 전달하지 않아도 된다.
 7. Repository 는 DataSourceUtils.getConnection() 를 통해 트랜잭션 동기화 매니저에서 보관된 같은 커넥션을 꺼내서 사용할 수 있다.
 ```java
@@ -68,7 +68,7 @@ Connection con = DataSourceUtils.getConnection(dataSource);
 ```
 8. SQL을 실행한다.
 
-<트랜잭션 종료>
+##### <트랜잭션 종료>
 9. 트랜잭션 동기화 매니저를 통해 **동기화된 커넥션**을 획득한다.
 10. 트랜잭션을 **커밋**하거나 **롤백**한다.
 ```java

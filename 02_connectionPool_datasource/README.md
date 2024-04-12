@@ -9,7 +9,7 @@
 ### DataSource
 - Connection을 얻는 방법은 DriverManager를 통해서 직접 네트워크와 통신하는 방법도 있지만, 이제 Connection Pool을 사용하는 방법도 존재한다는 것을 깨달았다.
 - 그런데 DriverManager를 사용하다가 DBCP2 Connection Pool을 연결하고 싶다거나, 커넥션 풀을 사용하다가 또 다른 커넥션 풀인 HikariCP Connection Pool을 연결하는 등 연결 방식을 변경할 때 문제가 발생할 것이다. 왜냐면 연결 방식이 다 다르기 때문이다.
-- 그래서 Conneciont을 획득하는 방법을 추상화할 필요성이 나타난 것이다. 그래서 나온 것이 ***DataSource interface***이다.
+- 그래서 Connection 획득하는 방법을 추상화할 필요성이 나타난 것이다. 그래서 나온 것이 ***DataSource interface***이다.
 ```java
 public interface DataSource {
   Connection getConnection() throws SQLException;
