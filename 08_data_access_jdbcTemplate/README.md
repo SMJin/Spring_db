@@ -68,3 +68,43 @@ String result = anitem.speak(() -> {
 - 단, 람다 표현식에는 제한이 있다.
 1. 인터페이스여야 하며,
 2. 인터페이스에는 하나의 추상 메서드만 선언되어야 한다.
+
+## JdbcTemplate.class 에서 적용한 익명클래스 + 람다
+- JdbcTemplate 에서는 결과 객체를 담는 ResultSet에 익명클래스를 적용했다.
+- 익명클래스는 함수처럼 담긴다는 의미로, @FunctionalInterface를 추가해주어야 한다.
+- ResultSet 객체를 RowMapper interface에 담았다.
+```java
+@FunctionalInterface
+public interface RowMapper<T> {
+    @Nullable
+    T mapRow(ResultSet rs, int rowNum) throws SQLException;
+}
+```
+- 사용법은 다음과 같다.
+```java
+private RowMapper<Item> itemRowMapper() {
+    return (rs, rowNum) -> {
+        Item item = new Item();
+        item.setId(rs.getLong("id"));
+        item.setItemName(rs.getString("item_name"));
+        item.setPrice(rs.getInt("price"));
+        item.setQuantity(rs.getInt("quantity"));
+        return item;
+    };
+}
+```
+- 람다를 풀어쓰면 다음과 같다.
+```java
+private RowMapper<Item> itemRowMapper() {
+    return new RowMapper<Item>() {
+        public Item mapRow(ResultSet rs, int rowNum) {
+          Item item = new Item();
+          item.setId(rs.getLong("id"));
+          item.setItemName(rs.getString("item_name"));
+          item.setPrice(rs.getInt("price"));
+          item.setQuantity(rs.getInt("quantity"));
+          return item;
+      };
+  }
+}
+```
