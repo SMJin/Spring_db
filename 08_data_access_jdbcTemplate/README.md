@@ -42,3 +42,29 @@ public class Client {
   }
 }
 ```
+
+## Java 8 : 익명클래스 (Anonymous Class)
+- 이름이 없다는 것, 기억할 필요가 없다는 것, 즉 임시로 쓰이고 버려지는 클래스라는 뜻이다.
+- 클래스나 추상클래스 등을 파라미터로 가져와서, 구체적인 구현은 파라미터 안에서 하는 것이다.
+
+## Java 8 : 람다 (Lambda)
+- 일종의 코드를 줄이는 전략 중 하나이다.
+- 흔하게 반복되는 코드를 줄여서 간략하게 줄이는 것이 핵심이다.
+```java
+// 람다 적용 전
+String result = anitem.speak(new AnimalStrategy() {
+    // callback
+    @Override
+    public String speak() {
+        return "야옹~";
+    }
+});
+
+// 람다 적용 후
+String result = anitem.speak(() -> {
+    return "야옹~";
+});
+```
+- 단, 람다 표현식에는 제한이 있다.
+1. 인터페이스여야 하며,
+2. 인터페이스에는 하나의 추상 메서드만 선언되어야 한다.
