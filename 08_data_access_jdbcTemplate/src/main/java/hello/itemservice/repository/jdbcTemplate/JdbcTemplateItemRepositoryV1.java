@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,8 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
 
     private final JdbcTemplate template;
 
-    public JdbcTemplateItemRepositoryV1(JdbcTemplate template) {
-        this.template = template;
+    public JdbcTemplateItemRepositoryV1(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
     }
 
     public Item save(Item item) {
