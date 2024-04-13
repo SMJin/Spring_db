@@ -42,12 +42,12 @@ public interface PlatformTransactionManager extends TransactionManager {
 3. HibernateTransactionManager (하이버네이트 트랜잭션 관리)
 4. EtcTransactionManager (기타 트랜잭션 관리)
 
-## 트랜잭션 동기화 (리소스 동기화 - 같은 커넥션을 유지하는 방법)
+## TransactionManager :: 리소스 동기화 - 같은 커넥션을 유지하는 방법
 - 스프링은 *트랜잭션 동기화 매니저*를 제공한다. 이것은 ***쓰레드 로컬(ThreadLocal)*** 을 사용해서 커넥션을 동기화해준다.
 - 다음 트랜잭션 동기화 매니저 클래스를 열어보면 쓰레드 로컬을 사용하는 것을 확인할 수 있다.
 > org.springframework.transaction.support.TransactionSynchronizationManager
 
-## TransactionManager 동작 흐름 ***(트랜잭션 추상화)***
+## TransactionManager 사용법 ***(트랜잭션 추상화)***
 - 트랜잭션 추상화를 적용하면 이제 JDBC 기술같은 구체적인 기술에 의존하지 않아도 된다.
 - 기술 변경시 의존관계 주입만 DataSourceTransactionManager 에서 JpaTransactionManager로 변경해주기만 하면 된다.
 ##### <트랜잭션 시작>
