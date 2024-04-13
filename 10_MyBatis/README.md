@@ -107,6 +107,10 @@ Optional<Item> findById(Long id);
   ]]>
 </if>
 ```
+#### 9. MyBatis의 동적쿼리 문법은 **OGNL** 문법이다.
+#### 10. 문자열 대체(String Substitution)
+- 파라미터 바인딩이 아니라 문자 그대로를 처리하고 싶은 경우도 있다. 이때는 ${} 를 사용하면 된다.
+- 하지만 보안에 취약할 수 있다. SQL Injection에 취약하다.
 
 ## MyBatis 의 구현체는 어디있는가? 어떻게 동작하는가?
 1. 애플리케이션 로딩 시점에 MyBatis 스프링 연동 모듈은 @Mapper 가 붙어있는 인터페이스를 조사한다.
