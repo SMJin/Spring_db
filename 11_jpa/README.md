@@ -50,3 +50,11 @@ logging.level.org.hibernate.orm.jdbc.bind=TRACE
 #### <select의 경우(단건 조회)> entityManager.find(Item.class, itemId)
 #### <select의 경우(다건 조회)> JPQL : Java Persistence Query Language
 - 그러나 얘도 복잡하다, 별로임. 이런 동적 쿼리의 경우 Querydsl 이라는 기술을 사용하자.
+
+## JPA의 예외 변환
+- JPA의 경우 JPA 예외가 발생하는데, PersistenceException 과 그 하위 예외를 발생시킨다.
+  - 추가로 JPA는 IllegalStateException , IllegalArgumentException 을 발생시킬 수 있다.
+- 스프링이 JPA 예외를 스프링 예외 추상화(DataAccessException)으로 변환하는 방법은?
+  - 비밀은 @Repository에 있다. @Repository 가 하는 두 가지 기능은 ...
+    - 첫째, 컴포넌트 스캔의 대상으로 만든다.
+    - 둘째, ***예외 변환 AOP의 적용 대상***으로 만든다. 그래서 스프링과 JPA를 함께 사용하는 경우에, 스프링은 JPA 예외 변환기(PersistenceExceptionTranslator)를 등록한다. 예외 변환 AOP 프록시는 JPA 관련 예외가 발생하면 JPA 예외 변환기를 통해 발생한 예외를 스프링 데이터 접근 예외로 변환한다.
