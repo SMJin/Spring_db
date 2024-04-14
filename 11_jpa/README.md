@@ -70,3 +70,5 @@ logging.level.org.hibernate.orm.jdbc.bind=TRACE
 - 그러나 단순한 조회의 경우 SpringDataJPA를 사용하고 복잡한 경우에 QueryDSL을 직접 사용해서 해결하면 된다. 또, JPQL로 해결하기 어려운 복잡한 쿼리는 JdbcTemplate, MyBatis를 섞어 사용하면 된다.
 ## QueryDSL 설정
 - 프로젝트의 빌드를 진행하면, Q타입이 생성되는 것을 확인 할 수 있다.
+- 쿼리를 모듈화 할 수 있다는 것이 너무나도 큰 장점이다.
+- 자세한 사용법은 코드를 보시오 ....
