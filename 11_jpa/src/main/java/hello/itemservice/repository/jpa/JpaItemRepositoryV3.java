@@ -68,7 +68,7 @@ public class JpaItemRepositoryV3 implements ItemRepository {
         return query
                 .select(item)
                 .from(item)
-                .where()
+                .where(builder)
                 .fetch();
     }
 }
