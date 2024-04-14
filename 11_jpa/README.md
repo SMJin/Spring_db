@@ -1,4 +1,4 @@
-# 데이터 접근 기술 - JPA
+# 데이터 접근 기술 - JPA, SpringDataJpa, QueryDSL
 
 ## JPA, Java Persistence API
 - 자바 진영의 ORM 표준.
@@ -58,3 +58,15 @@ logging.level.org.hibernate.orm.jdbc.bind=TRACE
   - 비밀은 @Repository에 있다. @Repository 가 하는 두 가지 기능은 ...
     - 첫째, 컴포넌트 스캔의 대상으로 만든다.
     - 둘째, ***예외 변환 AOP의 적용 대상***으로 만든다. 그래서 스프링과 JPA를 함께 사용하는 경우에, 스프링은 JPA 예외 변환기(PersistenceExceptionTranslator)를 등록한다. 예외 변환 AOP 프록시는 JPA 관련 예외가 발생하면 JPA 예외 변환기를 통해 발생한 예외를 스프링 데이터 접근 예외로 변환한다.
+
+# QueryDSL
+## DSL, Domain Specific Language (도메인 특화 언어)
+#### 특정 도메인에 초점을 맞춘 제한적인 표현력을 가진 컴퓨터 프로그래밍 언어
+- 코드 생성기가 Entity 정보를 읽어와서 객체를 만들어준다.
+- 즉, @Entity 코드를 읽어서 APT, **Annotation Processing Tool** 이 코드를 생성해준다.
+- JPA 쿼리인 JPQL을 typesafe 하게 작성하는 데 많이 사용된다.
+- BooleanBuilder 를 이용해서 동적쿼리를 만들기도 깔끔하게 된다.
+- 조인, 페이징, 정렬 등 지원한다.
+- 그러나 단순한 조회의 경우 SpringDataJPA를 사용하고 복잡한 경우에 QueryDSL을 직접 사용해서 해결하면 된다. 또, JPQL로 해결하기 어려운 복잡한 쿼리는 JdbcTemplate, MyBatis를 섞어 사용하면 된다.
+## QueryDSL 설정
+- 프로젝트의 빌드를 진행하면, Q타입이 생성되는 것을 확인 할 수 있다.
