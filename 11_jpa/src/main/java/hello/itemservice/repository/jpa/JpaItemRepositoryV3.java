@@ -1,5 +1,6 @@
 package hello.itemservice.repository.jpa;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import hello.itemservice.domain.Item;
 import hello.itemservice.domain.QItem;
@@ -15,6 +16,8 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
+
+import static hello.itemservice.domain.QItem.item;
 
 @Slf4j
 @Repository
@@ -53,15 +56,19 @@ public class JpaItemRepositoryV3 implements ItemRepository {
         String itemName = cond.getItemName();
         Integer maxPrice = cond.getMaxPrice();
 
-        if (StringUtils.hasText(itemName) && maxPrice != null) {
-            //return repository.findByItemNameLikeAndPriceLessThanEqual("%" + itemName +"%", maxPrice);
-            return repository.findItems("%" + itemName + "%", maxPrice);
-        } else if (StringUtils.hasText(itemName)) {
-            return repository.findByItemNameLike("%" + itemName + "%");
-        } else if (maxPrice != null) {
-            return repository.findByPriceLessThanEqual(maxPrice);
-        } else {
-            return repository.findAll();
+//        QItem item = new QItem("i");
+        BooleanBuilder builder = new BooleanBuilder();
+        if (StringUtils.hasText(itemName)) {
+            builder.and(item.itemName.like("%" + itemName + "%"));
         }
+        if (maxPrice != null) {
+            builder.and(item.price.loe(maxPrice));
+        }
+
+        return query
+                .select(item)
+                .from(item)
+                .where()
+                .fetch();
     }
 }
