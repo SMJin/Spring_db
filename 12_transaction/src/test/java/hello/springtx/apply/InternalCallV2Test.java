@@ -1,5 +1,6 @@
 package hello.springtx.apply;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,9 @@ public class InternalCallV2Test {
 
     @Autowired CallService callService;
 
-    @Test
-    void internalCall() {
-        callService.internal();
-    }
 
     @Test
-    void externalCall() {
+    void externalCallV2() {
         callService.external();
     }
 
@@ -29,17 +26,34 @@ public class InternalCallV2Test {
     static class InternalCallConfig {
         @Bean
         CallService callService() {
-            return new CallService();
+            return new CallService(internalService());
+        }
+
+        @Bean
+        InternalService internalService() {
+            return new InternalService();
         }
     }
 
     @Slf4j
+    @RequiredArgsConstructor
     static class CallService {
+
+        private final InternalService internalService;
+
         public void external() {
             log.info("call external");
             printTxInfo();
-            internal();
+            internalService.internal();
         }
+
+        private void printTxInfo() {
+            boolean txActive = TransactionSynchronizationManager.isActualTransactionActive();
+            log.info("tx active = {}", txActive);
+        }
+    }
+
+    static class InternalService {
 
         @Transactional
         public void internal() {
