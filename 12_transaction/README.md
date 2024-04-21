@@ -25,3 +25,17 @@ logging.level.org.springframework.transaction.interceptor=TRACE
 ###### (다만, rollbackFor = MyException.class 를 적용하면 체크 예외도 롤백한다.)
 ##### 비즈니스 에러 상황 발생 때문.
 ###### 비즈니스 에러란, 로직 내의 오류가 아니라, 잔고 부족 같이 사용자가 사용할 때 나타나는 에러이다.
+
+## application.properties
+```properties
+logging.level.org.apache.coyote.http11=TRACE
+spring.output.ansi.enabled=always
+
+logging.level.org.springframework.transaction.interceptor=TRACE
+logging.level.org.springframework.jdbc.datasource.DataSourceTransactionManager=DEBUG
+#JPA log
+logging.level.org.springframework.orm.jpa.JpaTransactionManager=DEBUG
+logging.level.org.hibernate.resource.transaction=DEBUG
+#JPA SQL
+logging.level.org.hibernate.SQL=DEBUG
+```
